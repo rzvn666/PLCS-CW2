@@ -8,5 +8,5 @@
  ## Options:
  -s \<starting port\> &ensp; range starting port <br />
  -e \<ending port\>   &ensp; range ending port <br />
- -h                   &ensp; display this help <br />
+ -h                   &emsp;&emsp; display this help <br />
 
