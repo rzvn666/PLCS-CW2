@@ -6,7 +6,7 @@
  ./scanner -s \<starting port\> -e \<ending port\>
 
  ## Options:
- -s \<starting port\>     range starting port <br />
- -e \<ending port\>       range ending port <br />
- -h                     display this help <br />
+ -s \<starting port\> &ensp; range starting port <br />
+ -e \<ending port\>   &ensp; range ending port <br />
+ -h                   &ensp; display this help <br />
 
