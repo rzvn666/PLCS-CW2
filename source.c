@@ -92,9 +92,16 @@ int main (int argc, char **argv)
 				sa.sin_port = htons(i); //htons() from arpa/inet.h (man htons), converts unsigned short integer (i) to network byte order; declares sin_port as the port from i
 				sock = socket(AF_INET, SOCK_STREAM, 0); //(int domain, int type, int protocol), create socket of type internet (ipv4, bi-directional byte stream, 0=default protocol for AF_INET)
 
+
+				//socket(SOCK_STREAM for TCP, SOCK_DGRAM for UDP)
+				// FOR NOW IT ONLY WORKS FOR TCP CONNECTIONS
+				// MAKE IT WORK FOR UDP TOO
+
+
+
 				if (sock < 0) // socket is OK if returns val > -1 (as file descriptor); if FAILED, returns val < 0, and errno (#include errno.h) is set to show the error
 				{
-					 printf("\nSocket error");
+					 printf("\nSocket error\n");
 					 exit(1);
 				}
 
