@@ -20,11 +20,10 @@ void help_menu()
 int main (int argc, char **argv)
 {
 	char hostname[100]="127.0.0.1"; //only works for local machine
-	int scan, i, sock, start, end, switch_flag; // declare integers
+	int scan, i, sock, start, end; // declare integers
 	struct sockaddr_in sa; //declare sockaddr_in (ipv4) as "sa" (man 3 socket.h)
 	start = -1; // initialise so the variables don't get a random number in the beginning
 	end = -1;
-	switch_flag=-1; // setting flag for switch case so help lines don't display again
 	sa.sin_addr.s_addr = inet_addr(hostname); // man socketaddr ; declaring ipv4 address
 	sa.sin_family = AF_INET; // declaring address family as internet
 
@@ -41,9 +40,7 @@ int main (int argc, char **argv)
 				switch( (*argv)[1] ) //switch case based on what comes after the "-"
 				{
 					default: //if what comes after the "-" is not any of the cases, print the below
-						switch_flag=1;
 						printf("\nUnknown option: \'-%c\'\n", (*argv)[1]);
-						printf("\nTry \'./scanner -h\' for more information.\n");
 						break; //stop the switch case
 					case 's': // if it is "-s" (starting port option)
 						*++argv; // increase pointer by one (point to the starting port number)
@@ -61,10 +58,10 @@ int main (int argc, char **argv)
 						{
 							start = atoi(argv[0]); //set start as the number argv is pointing to
 							// atoi() converts string to integer ; man 3 atoi
-							/*if ( start < -1 ) // if start is < 0, i.e. -1, -10
+							if ( start < -1 ) // if start is < 0, i.e. -1, -10
 							{
 								start = 0; // make start = 0
-							}*/
+							}
 						}
 						break;
 					case 'e': //same as the "-s" case (starting port) but with the "-e" for ending port
@@ -82,14 +79,13 @@ int main (int argc, char **argv)
 						else
 						{
 							end = atoi(argv[0]); // using variable "end" for the end port
-							/*if ( end < -1 ) // if input is less than 0, make it 0
+							if ( end < -1 ) // if input is less than 0, make it 0
 							{
 								end = 0;
-							}*/
+							}
 						}
 						break;
 					case 'h': // if the option is "-h" then show the help menu
-						switch_flag=1;
 						help_menu();
 						break;
 				}
@@ -106,7 +102,7 @@ int main (int argc, char **argv)
 			}
 		}
 
-		if ( (start == -1 || end == -1) && switch_flag==-1) // if start and end haven't been set deliberately and not because someone typed "./scanner -h" or an unknown option like "-a"
+		if ( start == -1 || end == -1 )
 		{
 			printf("\nPlease input all the port values.\n");
 			printf("\nTry \'./scanner -h\' for more information.\n");
