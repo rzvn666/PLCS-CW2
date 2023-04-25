@@ -22,12 +22,12 @@ int main (int argc, char **argv)
 	char hostname[100]="127.0.0.1"; //only works for local machine
 	int scan, i, sock, start, end; // declare integers
 	struct sockaddr_in sa; //declare sockaddr_in (ipv4) as "sa" (man 3 socket.h)
-	start = -1;
-	end = -1;
+	start = 0; // initialise so the variables don't get a random number in the beginning
+	end = 0;
 	sa.sin_addr.s_addr = inet_addr(hostname); // man socketaddr ; declaring ipv4 address
 	sa.sin_family = AF_INET; // declaring address family as internet
 
-	if (argc==1)
+	if (argc==1) // if argc sees that there is only 1 argument (name of program), then show help
 	{
 		help_menu();
 	}
@@ -35,67 +35,94 @@ int main (int argc, char **argv)
 	{
 		while( *++argv ) //loop until (null) pointer
 		{
-			if ((*argv)[0] == '-')
+			if ( (*argv)[0] == '-' ) //if the terminal arguments starts with "-"
 			{
-				switch((*argv)[1])
+				switch( (*argv)[1] ) //switch case based on what comes after the "-"
 				{
-					default:
+					default: //if what comes after the "-" is not any of the cases, print the below
 						printf("\nUnknown option: \'-%c\' \nTry \'./scanner -h\' for more information.\n", (*argv)[1]);
-						break;
-					case 's':
-						*++argv;
-						if(argv[0]==NULL)
+						break; //stop the switch case
+					case 's': // if it is "-s" (starting port option)
+						*++argv; // increase pointer by one (point to the starting port number)
+						if( argv[0]==NULL ) // if it is null, show help menu
+						{
+							//help_menu();
+							break;
+						}
+						else if ( (*argv)[0] == '-' ) // if argument right after "-s" is another case, show help then break
 						{
 							help_menu();
 							break;
 						}
-						else
+						else //if it isn't null
 						{
-							start = atoi(argv[0]);
-							if ( start < 0 )
+							start = atoi(argv[0]); //set start as the number argv is pointing to
+							// atoi() converts string to integer ; man 3 atoi
+							if ( start < 0 ) // if start is < 0, i.e. -1, -10
 							{
-								start = 0;
+								start = 0; // make start = 0
 							}
 						}
 						break;
-					case 'e':
-						*++argv;
+					case 'e': //same as the "-s" case (starting port) but with the "-e" for ending port
+						*++argv; // point to argument right after "-e"
 						if(argv[0]==NULL)
+						{
+							//help_menu();
+							break;
+						}
+						else if ( (*argv)[0] == '-' ) // if argument right after "-e" is another case, show help then break
 						{
 							help_menu();
 							break;
 						}
 						else
 						{
-							end = atoi(argv[0]);
-							if ( end < 0 )
+							end = atoi(argv[0]); // using variable "end" for the end port
+							if ( end < 0 ) // if input is less than 0, make it 0
 							{
 								end = 0;
 							}
 						}
 						break;
-					case 'h':
+					case 'h': // if the option is "-h" then show the help menu
 						help_menu();
 						break;
 				}
 			}
-			else
+			else //if ( ++argv[0] == NULL )
 			{
+				help_menu(); // if the pointer is placed at something
+				// that doesn't start with an "-", show help menu
+
+				// works due to the way the cases break out of the switch case
+				// and because of when an option is detected, the pointer is increased
+				// if the pointer is not increased, it will point to a
 				break;
 			}
 		}
-		if (start > -1 && end > -1 && start <= end)
+
+		if ( start>end ) //how to do this when "./scanner -s 100" to output help and when end is smaller than start
+		{
+			printf("\nStarting port cannot be larger than the ending port.\n");
+			printf("\nTry \'./scanner -h\' for more information.\n");
+		}
+		else if ( start == 0 && end == 0 )
+		{
+			printf("\nPorts must be larger than 0.\n");
+			printf("\nTry \'./scanner -h\' for more information.\n");
+		}
+		else if (start >= 0 && end > 0 && start <= end) // only start scan if start and end ports are larger than -1 and if start is less than or equal to end
 		{
 			printf("\nStarting a port scan with a range from %d to %d.\n\n", start, end);
-			for( i = start ; i <= end ; i++)
+			for( i = start ; i <= end ; i++) //looping from the start port until the end port, including
 			{
 				sa.sin_port = htons(i); //htons() from arpa/inet.h (man htons), converts unsigned short integer (i) to network byte order; declares sin_port as the port from i
 				sock = socket(AF_INET, SOCK_STREAM, 0); //(int domain, int type, int protocol), create socket of type internet (ipv4, bi-directional byte stream, 0=default protocol for AF_INET)
 
 
 				//socket(SOCK_STREAM for TCP, SOCK_DGRAM for UDP)
-				// FOR NOW IT ONLY WORKS FOR TCP CONNECTIONS
-				// MAKE IT WORK FOR UDP TOO
+				//impossible to know for UDP since it doesn't acknowledge the receival of the package
 
 
 
