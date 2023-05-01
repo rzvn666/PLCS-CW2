@@ -147,7 +147,7 @@ int main (int argc, char **argv)
 					//printf("%-5d %s\r\n" , i, strerror(errno));
 					fflush(stdout); //flushing i/o buffer, useful for flushing scanf and writing to files buffer
 				}
-				else
+				else //if the scan is 0 then the scan connected to the socket therefore connect() returned value 0, which means OK
 				{
 					printf("%-5d open\n", i);
 				}
